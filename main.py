@@ -1,11 +1,11 @@
-from ccxt.base import exchange
 import asyncio, time, logging, yaml
+from thanos.data_ws import run_data_ws
 from dataclasses import dataclass
 from dotenv import load_dotenv
 
-from src.data_ws import BinanceBookTickerWS
-from src.exchange_binance import BinanceSpotTestnet
-from src.strategy import Quoter
+from thanos.data_ws import run_data_ws
+from thanos.exchange_binance import BinanceSpotTestnet
+from thanos.strategy import Quoter
 
 load_dotenv() # load .env
 
@@ -23,7 +23,7 @@ class Config:
     api_key_env: str
     api_secret_env: str
 
-def load_cfg(path="config.yaml") -> Config:
+def load_cfg(path="src/config.yaml") -> Config:
     with open(path,"r",encoding="utf-8") as f:
         d = yaml.safe_load(f)
     return Config(**d)
@@ -31,7 +31,7 @@ def load_cfg(path="config.yaml") -> Config:
 async def main():
     cfg = load_cfg()
 
-    md = BinanceBookTickerWS(cfg.symbol)
+    md = run_data_ws(cfg.symbol)
     ws_task = asyncio.create_task(md.run())
 
     ex = BinanceSpotTestnet(cfg.symbol, cfg.api_key_env, cfg.api_secret_env)
@@ -83,4 +83,4 @@ async def main():
             pass
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(run_data_ws(env="testnet"))

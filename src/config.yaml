@@ -1,8 +1,0 @@
-exchange: binance
-symbol: BTC/USDT
-order_qty: 0.001
-spread_bps: 8
-requote_interval_ms: 3000
-max_inventory: 0.01
-api_key_env: BINANCE_API_KEY
-api_secret_env: BINANCE_API_SECRET
